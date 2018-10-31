@@ -36,7 +36,7 @@ namespace Stateless.Tests
               .Permit(Trigger.X, State.B);
 
             sm.Configure(State.B)
-              .OnEntryAsync(() => TaskResult.Done);
+              .OnEntryAsync(() => TaskResult.done);
 
             Assert.Throws<InvalidOperationException>(() => sm.Fire(Trigger.X));
         }
@@ -63,7 +63,7 @@ namespace Stateless.Tests
             var sm = new StateMachine<State, Trigger>(State.A);
 
             sm.Configure(State.A)
-              .OnExitAsync(() => TaskResult.Done)
+              .OnExitAsync(() => TaskResult.done)
               .Permit(Trigger.X, State.B);
 
             Assert.Throws<InvalidOperationException>(() => sm.Fire(Trigger.X));
@@ -89,7 +89,7 @@ namespace Stateless.Tests
             var sm = new StateMachine<State, Trigger>(State.A);
 
             sm.Configure(State.A)
-              .InternalTransitionAsync(Trigger.X, () => TaskResult.Done);
+              .InternalTransitionAsync(Trigger.X, () => TaskResult.done);
 
             Assert.Throws<InvalidOperationException>(() => sm.Fire(Trigger.X));
         }
@@ -137,7 +137,7 @@ namespace Stateless.Tests
             sm.Configure(State.A)
               .Permit(Trigger.X, State.B);
 
-            sm.OnTransitionedAsync(_ => TaskResult.Done);
+            sm.OnTransitionedAsync(_ => TaskResult.done);
 
             Assert.Throws<InvalidOperationException>(() => sm.Fire(Trigger.X));
         }
@@ -165,7 +165,7 @@ namespace Stateless.Tests
             sm.Configure(State.A)
                 .Permit(Trigger.X, State.B);
 
-            sm.OnUnhandledTriggerAsync((s, t) => TaskResult.Done);
+            sm.OnUnhandledTriggerAsync((s, t) => TaskResult.done);
 
             Assert.Throws<InvalidOperationException>(() => sm.Fire(Trigger.Z));
         }
@@ -177,7 +177,7 @@ namespace Stateless.Tests
             sm.Configure(State.A)
               .Permit(Trigger.X, State.B);
 
-            sm.OnUnhandledTriggerAsync((s, t, u) => TaskResult.Done);
+            sm.OnUnhandledTriggerAsync((s, t, u) => TaskResult.done);
 
             Assert.Throws<InvalidOperationException>(() => sm.Fire(Trigger.Z));
         }
@@ -217,7 +217,7 @@ namespace Stateless.Tests
             var sm = new StateMachine<State, Trigger>(State.A);
 
             sm.Configure(State.A)
-              .OnActivateAsync(() => TaskResult.Done);
+              .OnActivateAsync(() => TaskResult.done);
 
             Assert.Throws<InvalidOperationException>(() => sm.Activate());
         }
@@ -228,7 +228,7 @@ namespace Stateless.Tests
             var sm = new StateMachine<State, Trigger>(State.A);
 
             sm.Configure(State.A)
-              .OnDeactivateAsync(() => TaskResult.Done);
+              .OnDeactivateAsync(() => TaskResult.done);
 
             sm.Activate();
 

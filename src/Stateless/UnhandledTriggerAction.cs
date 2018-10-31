@@ -13,32 +13,32 @@ namespace Stateless
 
             internal class Sync : UnhandledTriggerAction
             {
-                readonly Action<TState, TTrigger, ICollection<string>> _action;
+                private readonly Action<TState, TTrigger, ICollection<string>> action;
 
                 internal Sync(Action<TState, TTrigger, ICollection<string>> action = null)
                 {
-                    _action = action;
+                    this.action = action;
                 }
 
                 public override void Execute(TState state, TTrigger trigger, ICollection<string> unmetGuards)
                 {
-                    _action(state, trigger, unmetGuards);
+                    this.action(state, trigger, unmetGuards);
                 }
 
                 public override Task ExecuteAsync(TState state, TTrigger trigger, ICollection<string> unmetGuards)
                 {
                     Execute(state, trigger, unmetGuards);
-                    return TaskResult.Done;
+                    return TaskResult.done;
                 }
             }
 
             internal class Async : UnhandledTriggerAction
             {
-                readonly Func<TState, TTrigger, ICollection<string>, Task> _action;
+                private readonly Func<TState, TTrigger, ICollection<string>, Task> action;
 
                 internal Async(Func<TState, TTrigger, ICollection<string>, Task> action)
                 {
-                    _action = action;
+                    this.action = action;
                 }
 
                 public override void Execute(TState state, TTrigger trigger, ICollection<string> unmetGuards)
@@ -50,7 +50,7 @@ namespace Stateless
 
                 public override Task ExecuteAsync(TState state, TTrigger trigger, ICollection<string> unmetGuards)
                 {
-                    return _action(state, trigger, unmetGuards);
+                    return this.action(state, trigger, unmetGuards);
                 }
             }
         }

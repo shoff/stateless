@@ -3,19 +3,18 @@
 namespace Stateless.Reflection
 {
     /// <summary>
-    /// 
     /// </summary>
     public abstract class TransitionInfo
     {
         /// <summary>
-        /// The trigger whose firing resulted in this transition.
+        ///     Method descriptions of the guard conditions.
+        ///     Returns a non-null but empty list if there are no guard conditions
         /// </summary>
-        public TriggerInfo Trigger { get; protected set; }
+        public IEnumerable<InvocationInfo> guardConditionsMethodDescriptions;
 
         /// <summary>
-        /// Method descriptions of the guard conditions.
-        /// Returns a non-null but empty list if there are no guard conditions
+        ///     The trigger whose firing resulted in this transition.
         /// </summary>
-        public IEnumerable<InvocationInfo> GuardConditionsMethodDescriptions;
+        public TriggerInfo Trigger { get; protected set; }
     }
 }

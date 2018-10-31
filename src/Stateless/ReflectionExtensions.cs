@@ -13,6 +13,7 @@ namespace Stateless
             return type.Assembly;
 #endif
         }
+
         public static bool IsAssignableFrom(this Type type, Type otherType)
         {
 #if PORTABLE_REFLECTION
@@ -21,9 +22,6 @@ namespace Stateless
             return type.IsAssignableFrom(otherType);
 #endif
         }
-
-
-
 
 
         /// <summary>

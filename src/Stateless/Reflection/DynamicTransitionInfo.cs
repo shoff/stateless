@@ -3,37 +3,36 @@
 namespace Stateless.Reflection
 {
     /// <summary>
-    /// 
     /// </summary>
     public class DynamicStateInfo
     {
         /// <summary>
-        /// Constructor
+        ///     Constructor
         /// </summary>
         public DynamicStateInfo(string destinationState, string criterion)
         {
-            DestinationState = destinationState;
-            Criterion = criterion;
+            this.DestinationState = destinationState;
+            this.Criterion = criterion;
         }
 
         /// <summary>
-        /// The name of the destination state
+        ///     The name of the destination state
         /// </summary>
         public string DestinationState { get; set; }
 
         /// <summary>
-        /// The reason this destination state was chosen
+        ///     The reason this destination state was chosen
         /// </summary>
         public string Criterion { get; set; }
     }
 
     /// <summary>
-    /// List of DynamicStateInfo objects, with "add" function for ease of definition
+    ///     List of DynamicStateInfo objects, with "add" function for ease of definition
     /// </summary>
     public class DynamicStateInfos : List<DynamicStateInfo>
     {
         /// <summary>
-        /// Add a DynamicStateInfo with less typing
+        ///     Add a DynamicStateInfo with less typing
         /// </summary>
         /// <param name="destinationState"></param>
         /// <param name="criterion"></param>
@@ -43,7 +42,7 @@ namespace Stateless.Reflection
         }
 
         /// <summary>
-        /// Add a DynamicStateInfo with less typing
+        ///     Add a DynamicStateInfo with less typing
         /// </summary>
         /// <param name="destinationState"></param>
         /// <param name="criterion"></param>
@@ -54,10 +53,14 @@ namespace Stateless.Reflection
     }
 
     /// <summary>
-    /// Describes a transition that can be initiated from a trigger, but whose result is non-deterministic.
+    ///     Describes a transition that can be initiated from a trigger, but whose result is non-deterministic.
     /// </summary>
     public class DynamicTransitionInfo : TransitionInfo
     {
+        private DynamicTransitionInfo()
+        {
+        }
+
         internal InvocationInfo DestinationStateSelectorDescription { get; private set; }
         internal DynamicStateInfos PossibleDestinationStates { get; private set; }
 
@@ -67,14 +70,13 @@ namespace Stateless.Reflection
             var transition = new DynamicTransitionInfo
             {
                 Trigger = new TriggerInfo(trigger),
-                GuardConditionsMethodDescriptions = guards ?? new List<InvocationInfo>(),
+                guardConditionsMethodDescriptions = guards ?? new List<InvocationInfo>(),
                 DestinationStateSelectorDescription = selector,
-                PossibleDestinationStates = possibleStates // behaviour.PossibleDestinationStates?.Select(x => x.ToString()).ToArray()
+                PossibleDestinationStates =
+                    possibleStates // behaviour.PossibleDestinationStates?.Select(x => x.ToString()).ToArray()
             };
 
             return transition;
         }
-
-        private DynamicTransitionInfo() { }
     }
 }

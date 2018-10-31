@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
+using Stateless.Reflection;
 
 namespace Stateless
 {
@@ -7,61 +8,61 @@ namespace Stateless
     {
         internal abstract class DeactivateActionBehaviour
         {
-            readonly TState _state;
+            private readonly TState state;
 
-            protected DeactivateActionBehaviour(TState state, Reflection.InvocationInfo actionDescription)
+            protected DeactivateActionBehaviour(TState state, InvocationInfo actionDescription)
             {
-                _state = state;
+                this.state = state;
                 Description = actionDescription ?? throw new ArgumentNullException(nameof(actionDescription));
             }
 
-            internal Reflection.InvocationInfo Description { get; }
+            internal InvocationInfo Description { get; }
 
             public abstract void Execute();
             public abstract Task ExecuteAsync();
 
             public class Sync : DeactivateActionBehaviour
             {
-                readonly Action _action;
+                private readonly Action action;
 
-                public Sync(TState state, Action action, Reflection.InvocationInfo actionDescription)
+                public Sync(TState state, Action action, InvocationInfo actionDescription)
                     : base(state, actionDescription)
                 {
-                    _action = action;
+                    this.action = action;
                 }
 
                 public override void Execute()
                 {
-                    _action();
+                    this.action();
                 }
 
                 public override Task ExecuteAsync()
                 {
                     Execute();
-                    return TaskResult.Done;
+                    return TaskResult.done;
                 }
             }
 
             public class Async : DeactivateActionBehaviour
             {
-                readonly Func<Task> _action;
+                private readonly Func<Task> action;
 
-                public Async(TState state, Func<Task> action, Reflection.InvocationInfo actionDescription)
+                public Async(TState state, Func<Task> action, InvocationInfo actionDescription)
                     : base(state, actionDescription)
                 {
-                    _action = action;
+                    this.action = action;
                 }
 
                 public override void Execute()
                 {
                     throw new InvalidOperationException(
-                        $"Cannot execute asynchronous action specified in OnDeactivateAsync for '{_state}' state. " +
-                         "Use asynchronous version of Deactivate [DeactivateAsync]");
+                        $"Cannot execute asynchronous action specified in OnDeactivateAsync for '{this.state}' state. " +
+                        "Use asynchronous version of Deactivate [DeactivateAsync]");
                 }
 
                 public override Task ExecuteAsync()
                 {
-                    return _action();
+                    return this.action();
                 }
             }
         }

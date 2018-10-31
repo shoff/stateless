@@ -3,16 +3,16 @@
 namespace Stateless.Graph
 {
     /// <summary>
-    /// Used to keep track of the decision point of a dynamic transition
+    ///     Used to keep track of the decision point of a dynamic transition
     /// </summary>
-    class Decision : State
+    internal class Decision : State
     {
-        public InvocationInfo Method { get; private set; }
-
         internal Decision(InvocationInfo method, int num)
-            : base("Decision" + num.ToString())
+            : base("Decision" + num)
         {
-            Method = method;
+            this.Method = method;
         }
+
+        public InvocationInfo Method { get; }
     }
 }

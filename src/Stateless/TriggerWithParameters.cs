@@ -5,50 +5,49 @@ namespace Stateless
     partial class StateMachine<TState, TTrigger>
     {
         /// <summary>
-        /// Associates configured parameters with an underlying trigger value.
+        ///     Associates configured parameters with an underlying trigger value.
         /// </summary>
         public abstract class TriggerWithParameters
         {
-            readonly TTrigger _underlyingTrigger;
-            readonly Type[] _argumentTypes;
+            private readonly Type[] argumentTypes;
 
             /// <summary>
-            /// Create a configured trigger.
+            ///     Create a configured trigger.
             /// </summary>
             /// <param name="underlyingTrigger">Trigger represented by this trigger configuration.</param>
             /// <param name="argumentTypes">The argument types expected by the trigger.</param>
             public TriggerWithParameters(TTrigger underlyingTrigger, params Type[] argumentTypes)
             {
-                _underlyingTrigger = underlyingTrigger;
-                _argumentTypes = argumentTypes ?? throw new ArgumentNullException(nameof(argumentTypes));
+                Trigger = underlyingTrigger;
+                this.argumentTypes = argumentTypes ?? throw new ArgumentNullException(nameof(argumentTypes));
             }
 
             /// <summary>
-            /// Gets the underlying trigger value that has been configured.
+            ///     Gets the underlying trigger value that has been configured.
             /// </summary>
-            public TTrigger Trigger { get { return _underlyingTrigger; } }
+            public TTrigger Trigger { get; }
 
             /// <summary>
-            /// Ensure that the supplied arguments are compatible with those configured for this
-            /// trigger.
+            ///     Ensure that the supplied arguments are compatible with those configured for this
+            ///     trigger.
             /// </summary>
             /// <param name="args"></param>
             public void ValidateParameters(object[] args)
             {
                 if (args == null) throw new ArgumentNullException(nameof(args));
 
-                ParameterConversion.Validate(args, _argumentTypes);
+                ParameterConversion.Validate(args, this.argumentTypes);
             }
         }
 
         /// <summary>
-        /// A configured trigger with one required argument.
+        ///     A configured trigger with one required argument.
         /// </summary>
         /// <typeparam name="TArg0">The type of the first argument.</typeparam>
         public class TriggerWithParameters<TArg0> : TriggerWithParameters
         {
             /// <summary>
-            /// Create a configured trigger.
+            ///     Create a configured trigger.
             /// </summary>
             /// <param name="underlyingTrigger">Trigger represented by this trigger configuration.</param>
             public TriggerWithParameters(TTrigger underlyingTrigger)
@@ -58,14 +57,14 @@ namespace Stateless
         }
 
         /// <summary>
-        /// A configured trigger with two required arguments.
+        ///     A configured trigger with two required arguments.
         /// </summary>
         /// <typeparam name="TArg0">The type of the first argument.</typeparam>
         /// <typeparam name="TArg1">The type of the second argument.</typeparam>
         public class TriggerWithParameters<TArg0, TArg1> : TriggerWithParameters
         {
             /// <summary>
-            /// Create a configured trigger.
+            ///     Create a configured trigger.
             /// </summary>
             /// <param name="underlyingTrigger">Trigger represented by this trigger configuration.</param>
             public TriggerWithParameters(TTrigger underlyingTrigger)
@@ -75,7 +74,7 @@ namespace Stateless
         }
 
         /// <summary>
-        /// A configured trigger with three required arguments.
+        ///     A configured trigger with three required arguments.
         /// </summary>
         /// <typeparam name="TArg0">The type of the first argument.</typeparam>
         /// <typeparam name="TArg1">The type of the second argument.</typeparam>
@@ -83,7 +82,7 @@ namespace Stateless
         public class TriggerWithParameters<TArg0, TArg1, TArg2> : TriggerWithParameters
         {
             /// <summary>
-            /// Create a configured trigger.
+            ///     Create a configured trigger.
             /// </summary>
             /// <param name="underlyingTrigger">Trigger represented by this trigger configuration.</param>
             public TriggerWithParameters(TTrigger underlyingTrigger)

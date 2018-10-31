@@ -1,4 +1,5 @@
 ﻿using System;
+using Stateless.Reflection;
 
 namespace Stateless
 {
@@ -6,20 +7,21 @@ namespace Stateless
     {
         internal class DynamicTriggerBehaviour : TriggerBehaviour
         {
-            readonly Func<object[], TState> _destination;
-            internal Reflection.DynamicTransitionInfo TransitionInfo { get; private set; }
+            private readonly Func<object[], TState> destination;
 
-            public DynamicTriggerBehaviour(TTrigger trigger, Func<object[], TState> destination, 
-                TransitionGuard transitionGuard, Reflection.DynamicTransitionInfo info)
+            public DynamicTriggerBehaviour(TTrigger trigger, Func<object[], TState> destination,
+                TransitionGuard transitionGuard, DynamicTransitionInfo info)
                 : base(trigger, transitionGuard)
             {
-                _destination = destination ?? throw new ArgumentNullException(nameof(destination));
+                this.destination = destination ?? throw new ArgumentNullException(nameof(destination));
                 TransitionInfo = info ?? throw new ArgumentNullException(nameof(info));
             }
 
+            internal DynamicTransitionInfo TransitionInfo { get; }
+
             public override bool ResultsInTransitionFrom(TState source, object[] args, out TState destination)
             {
-                destination = _destination(args);
+                destination = this.destination(args);
                 return true;
             }
         }

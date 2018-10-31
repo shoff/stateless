@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
+using Stateless.Reflection;
 
 namespace Stateless
 {
@@ -7,61 +8,61 @@ namespace Stateless
     {
         internal abstract class ActivateActionBehaviour
         {
-            readonly TState _state;
+            private readonly TState state;
 
-            protected ActivateActionBehaviour(TState state, Reflection.InvocationInfo actionDescription)
+            protected ActivateActionBehaviour(TState state, InvocationInfo actionDescription)
             {
-                _state = state;
+                this.state = state;
                 Description = actionDescription ?? throw new ArgumentNullException(nameof(actionDescription));
             }
 
-            internal Reflection.InvocationInfo Description { get; }
+            internal InvocationInfo Description { get; }
 
             public abstract void Execute();
             public abstract Task ExecuteAsync();
 
             public class Sync : ActivateActionBehaviour
             {
-                readonly Action _action;
+                private readonly Action action;
 
-                public Sync(TState state, Action action, Reflection.InvocationInfo actionDescription)
+                public Sync(TState state, Action action, InvocationInfo actionDescription)
                     : base(state, actionDescription)
                 {
-                    _action = action;
+                    this.action = action;
                 }
 
                 public override void Execute()
                 {
-                    _action();
+                    this.action();
                 }
 
                 public override Task ExecuteAsync()
                 {
                     Execute();
-                    return TaskResult.Done;
+                    return TaskResult.done;
                 }
             }
 
             public class Async : ActivateActionBehaviour
             {
-                readonly Func<Task> _action;
+                private readonly Func<Task> action;
 
-                public Async(TState state, Func<Task> action, Reflection.InvocationInfo actionDescription)
+                public Async(TState state, Func<Task> action, InvocationInfo actionDescription)
                     : base(state, actionDescription)
                 {
-                    _action = action;
+                    this.action = action;
                 }
 
                 public override void Execute()
                 {
                     throw new InvalidOperationException(
-                        $"Cannot execute asynchronous action specified in OnActivateAsync for '{_state}' state. " +
-                         "Use asynchronous version of Activate [ActivateAsync]");
+                        $"Cannot execute asynchronous action specified in OnActivateAsync for '{this.state}' state. " +
+                        "Use asynchronous version of Activate [ActivateAsync]");
                 }
 
                 public override Task ExecuteAsync()
                 {
-                    return _action();
+                    return this.action();
                 }
             }
         }

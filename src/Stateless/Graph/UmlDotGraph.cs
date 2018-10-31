@@ -3,12 +3,12 @@
 namespace Stateless.Graph
 {
     /// <summary>
-    /// Class to generate a DOT grah in UML format
+    ///     Class to generate a DOT grah in UML format
     /// </summary>
     public static class UmlDotGraph
     {
         /// <summary>
-        /// Generate a UML DOT graph from the state machine info
+        ///     Generate a UML DOT graph from the state machine info
         /// </summary>
         /// <param name="machineInfo"></param>
         /// <returns></returns>
@@ -18,6 +18,5 @@ namespace Stateless.Graph
 
             return graph.ToGraph(new UmlDotGraphStyle());
         }
-
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
+using Stateless.Reflection;
 
 namespace Stateless
 {
@@ -7,56 +8,55 @@ namespace Stateless
     {
         internal abstract class ExitActionBehavior
         {
-            public abstract void Execute(Transition transition);
-            public abstract Task ExecuteAsync(Transition transition);
-
-            protected ExitActionBehavior(Reflection.InvocationInfo actionDescription)
+            protected ExitActionBehavior(InvocationInfo actionDescription)
             {
                 Description = actionDescription ?? throw new ArgumentNullException(nameof(actionDescription));
             }
 
-            internal Reflection.InvocationInfo Description { get; }
+            internal InvocationInfo Description { get; }
+            public abstract void Execute(Transition transition);
+            public abstract Task ExecuteAsync(Transition transition);
 
             public class Sync : ExitActionBehavior
             {
-                readonly Action<Transition> _action;
+                private readonly Action<Transition> action;
 
-                public Sync(Action<Transition> action, Reflection.InvocationInfo actionDescription) : base(actionDescription)
+                public Sync(Action<Transition> action, InvocationInfo actionDescription) : base(actionDescription)
                 {
-                    _action = action;
+                    this.action = action;
                 }
 
                 public override void Execute(Transition transition)
                 {
-                    _action(transition);
+                    this.action(transition);
                 }
 
                 public override Task ExecuteAsync(Transition transition)
                 {
                     Execute(transition);
-                    return TaskResult.Done;
+                    return TaskResult.done;
                 }
             }
 
             public class Async : ExitActionBehavior
             {
-                readonly Func<Transition, Task> _action;
+                private readonly Func<Transition, Task> action;
 
-                public Async(Func<Transition, Task> action, Reflection.InvocationInfo actionDescription) : base(actionDescription)
+                public Async(Func<Transition, Task> action, InvocationInfo actionDescription) : base(actionDescription)
                 {
-                    _action = action;
+                    this.action = action;
                 }
 
                 public override void Execute(Transition transition)
                 {
                     throw new InvalidOperationException(
                         $"Cannot execute asynchronous action specified in OnExit event for '{transition.Source}' state. " +
-                         "Use asynchronous version of Fire [FireAsync]");
+                        "Use asynchronous version of Fire [FireAsync]");
                 }
 
                 public override Task ExecuteAsync(Transition transition)
                 {
-                    return _action(transition);
+                    return this.action(transition);
                 }
             }
         }
